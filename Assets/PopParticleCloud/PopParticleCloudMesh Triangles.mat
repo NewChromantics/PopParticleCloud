@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: PopParticleCloudMesh
+  m_Name: PopParticleCloudMesh Triangles
   m_Shader: {fileID: 4800000, guid: 8c847829cd09f49db9971b478973c10b, type: 3}
   m_ShaderKeywords: POINT_GEOMETRY
   m_LightmapFlags: 5
@@ -24,8 +24,11 @@ Material:
     m_Floats:
     - first:
         name: ParticleSize
-      second: 0.623
+      second: 0.57
     - first:
         name: Radius
       second: 0.28
+    - first:
+        name: UseVertexColour
+      second: 0
     m_Colors: []

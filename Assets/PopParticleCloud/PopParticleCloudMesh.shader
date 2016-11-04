@@ -7,6 +7,7 @@ Shader "NewChromantics/PopParticleCloudMesh"
 		_MainTex ("Texture", 2D) = "white" {}
 		ParticleSize("ParticleSize",Range(0.001,1) ) = 0.1
 		Radius("Radius", Range(0,1) ) = 0.5
+		UseVertexColour("UseVertexColour", Range(0,1) ) = 0.0
 	}
 	SubShader
 	{
@@ -21,7 +22,7 @@ Shader "NewChromantics/PopParticleCloudMesh"
 			#pragma geometry geom
 			#pragma fragment frag
 
-			#pragma shader_feature POINT_GEOMETRY
+			#pragma shader_feature POINT_TOPOLOGY
 
 			#include "UnityCG.cginc"
 
@@ -29,12 +30,14 @@ Shader "NewChromantics/PopParticleCloudMesh"
 			{
 				float4 LocalPos : POSITION;
 				float2 uv : TEXCOORD0;
+				float4 Rgba : COLOR;
 			};
 
 			struct vert2geo
 			{
 				float4 WorldPos : POSITION;
 				float2 uv : TEXCOORD0;
+				float4 Rgba : COLOR;
 			};
 
 			struct geo2frag
@@ -51,7 +54,7 @@ Shader "NewChromantics/PopParticleCloudMesh"
 			float4 _MainTex_ST;
 			float ParticleSize;
 			float Radius;
-
+			float UseVertexColour;
 
 			vert2geo vert (app2vert v)
 			{
@@ -63,11 +66,12 @@ Shader "NewChromantics/PopParticleCloudMesh"
 				//o.ScreenPos = mul(UNITY_MATRIX_MVP, LocalPos);
 
 				o.uv = v.uv;
+				o.Rgba = v.Rgba;
 
 				return o;
 			}
 
-			#if POINT_GEOMETRY
+			#if POINT_TOPOLOGY
 			[maxvertexcount(36)]
             void geom(point vert2geo _input[1], inout TriangleStream<geo2frag> OutputStream)
             {
@@ -114,6 +118,10 @@ Shader "NewChromantics/PopParticleCloudMesh"
 	                a.Colour = a.Bary;
 	                b.Colour = b.Bary;
 	                c.Colour = c.Bary;
+
+	                a.Colour = lerp( a.Colour, input.Rgba, UseVertexColour );
+	                b.Colour = lerp( b.Colour, input.Rgba, UseVertexColour );
+	                c.Colour = lerp( c.Colour, input.Rgba, UseVertexColour );
 
 	              	OutputStream.Append(a);
 	              	OutputStream.Append(b);

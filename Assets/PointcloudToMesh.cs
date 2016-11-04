@@ -11,8 +11,9 @@ public class PointcloudToMesh : MonoBehaviour {
 	public bool		Dirty = true;
 	public string	Filename;
 	public Mesh		PointMesh;
-	public bool		Center = true;
-	public bool ModifySharedMaterial = true;
+	public bool		CenterMesh = true;
+	public bool		MoveSelf = true;
+	public bool		ModifySharedMaterial = true;
 	public string	EnableShaderFeature = "POINT_GEOMETRY";
 
 	void Update () 
@@ -67,13 +68,16 @@ public class PointcloudToMesh : MonoBehaviour {
 		}
 
 		//	center verts
-		if (Center) {
+		if (CenterMesh) {
 			var BoundsCenter = MinMax.center;
 			for (int i = 0;	i < Positions.Count;	i++) {
 				Positions [i] -= BoundsCenter;
 			}
 			MinMax.min -= BoundsCenter;
 			MinMax.max -= BoundsCenter;
+
+			if (MoveSelf)
+				this.transform.localPosition = BoundsCenter;
 		}
 
 		//	generate indicies
