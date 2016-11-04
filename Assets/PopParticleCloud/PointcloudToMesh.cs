@@ -16,13 +16,17 @@ public class PointcloudToMesh : MonoBehaviour {
 	public bool		ModifySharedMaterial = true;
 	public string	EnableShaderFeature = "POINT_GEOMETRY";
 
-	void Update () 
+	void Update ()
 	{
-		if (!Dirty )
+		if (!Dirty)
 			return;
 
+		GenerateNewMesh ();
 		Dirty = false;
+	}
 
+	public void GenerateNewMesh()
+	{
 		//	create mesh
 		PointMesh = new Mesh();
 
@@ -106,6 +110,5 @@ public class PointcloudToMesh : MonoBehaviour {
 			bc.enabled = true;
 		}
 
-		Dirty = false;
 	}
 }
