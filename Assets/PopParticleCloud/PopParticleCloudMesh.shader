@@ -67,12 +67,18 @@ Shader "NewChromantics/PopParticleCloudMesh"
 				return o;
 			}
 
-			#if !POINT_GEOMETRY
+			#if POINT_GEOMETRY
 			[maxvertexcount(36)]
+            void geom(point vert2geo _input[1], inout TriangleStream<geo2frag> OutputStream)
+            {
+            	int v=0;
+            #else
+            [maxvertexcount(36)]
             void geom(triangle vert2geo _input[3], inout TriangleStream<geo2frag> OutputStream)
             {
             	//	non-shared vertex in triangles is 2nd
             	int v=1;
+            #endif
             	{
 	            	vert2geo input = _input[v];
 
@@ -114,7 +120,7 @@ Shader "NewChromantics/PopParticleCloudMesh"
 	              	OutputStream.Append(c);
 	            }
             }
-            #endif
+
 			
 			fixed4 frag (geo2frag i) : SV_Target
 			{
