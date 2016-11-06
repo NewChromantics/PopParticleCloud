@@ -22,17 +22,23 @@ public class PointcloudLoader : MonoBehaviour {
 
 		NewCloud.Filename = Filename;
 		NewCloud.GenerateNewMesh();
+		NewCloud.gameObject.SetActive (true);
+	}
 
+	void ClearClouds()
+	{
+		foreach (var go in GeneratedClouds) {
+			Destroy (go);
+		}
+		GeneratedClouds.Clear ();
 	}
 
 
 	void Update () {
 	
 		if (Dirty) {
-			foreach (var go in GeneratedClouds) {
-				Destroy (go);
-			}
-			GeneratedClouds.Clear ();
+
+			ClearClouds ();
 			LoadQueue.Clear ();
 
 			try
