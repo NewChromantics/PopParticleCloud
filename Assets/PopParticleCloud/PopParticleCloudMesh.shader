@@ -71,18 +71,29 @@ Shader "NewChromantics/PopParticleCloudMesh"
 				return o;
 			}
 
+		
 			#if POINT_TOPOLOGY
-			[maxvertexcount(36)]
+			[maxvertexcount(9)]
             void geom(point vert2geo _input[1], inout TriangleStream<geo2frag> OutputStream)
             {
             	int v=0;
             #else
-            [maxvertexcount(36)]
+            [maxvertexcount(9)]
             void geom(triangle vert2geo _input[3], inout TriangleStream<geo2frag> OutputStream)
             {
             	//	non-shared vertex in triangles is 2nd
             	int v=1;
             #endif
+
+				//	get particle size in worldspace
+				//	gr: thought it length of each row was scale but... doesn't seem to be. row vs col major issue?
+				//float WorldScale = length(unity_ObjectToWorld[0]) + length(unity_ObjectToWorld[1]) + length(unity_ObjectToWorld[2]);
+				//WorldScale /= 3.0;
+				float3 OneTrans = mul( unity_ObjectToWorld, float4(1,0,0,0 ) );
+				float3 ZeroTrans = mul( unity_ObjectToWorld, float4(0,0,0,0 ) );
+				float WorldScale = length(OneTrans - ZeroTrans);
+				float3 ParticleSize3 = float3( ParticleSize * WorldScale, ParticleSize * WorldScale, ParticleSize * WorldScale );
+
             	{
 	            	vert2geo input = _input[v];
 
@@ -102,18 +113,14 @@ Shader "NewChromantics/PopParticleCloudMesh"
 	                b.LocalOffset.xyz = float3( -Width,Bottom,0 );
 	                c.LocalOffset.xyz = float3( Width,Bottom,0 );
 
-	               	a.LocalOffset *= ParticleSize;
-	                b.LocalOffset *= ParticleSize;
-	                c.LocalOffset *= ParticleSize;
+	              
+	                a.WorldPos = mul( UNITY_MATRIX_V, input.WorldPos ) + (a.LocalOffset * ParticleSize3);
+	                b.WorldPos = mul( UNITY_MATRIX_V, input.WorldPos ) + (b.LocalOffset * ParticleSize3);
+	                c.WorldPos = mul( UNITY_MATRIX_V, input.WorldPos ) + (c.LocalOffset * ParticleSize3);
 
-	                //	gr: align LocalOffset to screen
-	                a.WorldPos = input.WorldPos + a.LocalOffset;
-	                b.WorldPos = input.WorldPos + b.LocalOffset;
-	                c.WorldPos = input.WorldPos + c.LocalOffset;
-
-	                a.ScreenPos = mul( UNITY_MATRIX_VP, float4(a.WorldPos,1) );
-	                b.ScreenPos = mul( UNITY_MATRIX_VP, float4(b.WorldPos,1) );
-	                c.ScreenPos = mul( UNITY_MATRIX_VP, float4(c.WorldPos,1) );
+	                a.ScreenPos = mul( UNITY_MATRIX_P, float4(a.WorldPos,1) );
+	                b.ScreenPos = mul( UNITY_MATRIX_P, float4(b.WorldPos,1) );
+	                c.ScreenPos = mul( UNITY_MATRIX_P, float4(c.WorldPos,1) );
 
 	                a.Colour = a.Bary;
 	                b.Colour = b.Bary;
