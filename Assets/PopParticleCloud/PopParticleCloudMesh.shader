@@ -22,6 +22,10 @@ Shader "NewChromantics/PopParticleCloudMesh"
 			#pragma geometry geom
 			#pragma fragment frag
 
+			//	geometry shader needs GL ES 3+
+			//	https://docs.unity3d.com/Manual/SL-ShaderCompileTargets.html
+			#pragma target 3.5
+
 			#pragma shader_feature POINT_TOPOLOGY
 
 			#include "UnityCG.cginc"
