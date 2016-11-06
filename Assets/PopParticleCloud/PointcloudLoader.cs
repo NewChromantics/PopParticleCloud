@@ -8,7 +8,9 @@ public class PointcloudLoader : MonoBehaviour {
 
 	public bool				Dirty = true;
 	public PointcloudToMesh	Template;
-	public string			Path;
+	public List<string>		Paths;
+	public List<string>		ExcludeMatching = new List<string> ( new string[]{".meta"});
+	public List<string>		OnlyMatching = new List<string> ();
 	public List<string>		LoadQueue = new List<string>();
 
 	public List<GameObject>	GeneratedClouds = new List<GameObject>();
@@ -33,6 +35,39 @@ public class PointcloudLoader : MonoBehaviour {
 		GeneratedClouds.Clear ();
 	}
 
+	void EnumDirectory(string Path)
+	{
+		var Dir = new System.IO.DirectoryInfo (Path);
+		var Files = Dir.GetFiles ();
+
+		foreach (var File in Files) 
+		{
+			var ShortName = File.Name;
+		
+			bool Excluded = false;
+			foreach ( var ExcludeMatch in ExcludeMatching )
+			{
+				if (ShortName.Contains (ExcludeMatch))
+					Excluded = true;
+			}
+			if (Excluded)
+				continue;
+
+			bool Matched = (OnlyMatching.Count==0);
+			foreach ( var OnlyMatch in OnlyMatching )
+			{
+				Matched |= ShortName.Contains (OnlyMatch);
+			}
+				
+
+			LoadQueue.Add (File.FullName);
+		}
+	}
+
+	void Start()
+	{
+		Dirty = true;
+	}
 
 	void Update () {
 	
@@ -41,19 +76,19 @@ public class PointcloudLoader : MonoBehaviour {
 			ClearClouds ();
 			LoadQueue.Clear ();
 
-			try
-			{
-				var Dir = new System.IO.DirectoryInfo( Path );
-				var Files = Dir.GetFiles();
-				foreach ( var File in Files )
-				{
-					LoadQueue.Add( File.FullName );
+			foreach (var _Path in Paths) {
+
+				var Path = PopUrl.ReolveUrl (_Path);
+
+				if (Path.StartsWith (PopUrl.FileProtocol))
+					Path = Path.Substring (PopUrl.FileProtocol.Length);
+
+				try {
+						EnumDirectory( Path );
+				} catch (System.Exception e) {
+					Debug.LogWarning ("failed to iterate path: " + Path + ": " + e.Message);
 				}
-			}
-			catch( System.Exception e ) {
-				Debug.LogWarning ("failed to iterate path: " + Path + ": " + e.Message);
-			}
-			
+			}			
 			Dirty = false;
 		}
 
