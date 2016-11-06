@@ -117,11 +117,10 @@ Shader "NewChromantics/PopParticleCloudMesh"
 	                b.LocalOffset.xyz = float3( -Width,Bottom,0 );
 	                c.LocalOffset.xyz = float3( Width,Bottom,0 );
 
-	              
 	                a.WorldPos = mul( UNITY_MATRIX_V, input.WorldPos ) + (a.LocalOffset * ParticleSize3);
 	                b.WorldPos = mul( UNITY_MATRIX_V, input.WorldPos ) + (b.LocalOffset * ParticleSize3);
 	                c.WorldPos = mul( UNITY_MATRIX_V, input.WorldPos ) + (c.LocalOffset * ParticleSize3);
-
+	              
 	                a.ScreenPos = mul( UNITY_MATRIX_P, float4(a.WorldPos,1) );
 	                b.ScreenPos = mul( UNITY_MATRIX_P, float4(b.WorldPos,1) );
 	                c.ScreenPos = mul( UNITY_MATRIX_P, float4(c.WorldPos,1) );
@@ -150,7 +149,7 @@ Shader "NewChromantics/PopParticleCloudMesh"
 				//float Bary = i.Bary.x + i.Bary.y + i.Bary.z;
 				//Bary /= 3;
 				//return float4( Bary, Bary, Bary, 1 );
-				if ( DistanceFromCenter > Radius*ParticleSize )
+				if ( DistanceFromCenter > Radius )
 				{
 					//return float4(0,0,0,1);
 					discard;
