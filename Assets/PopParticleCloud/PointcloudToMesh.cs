@@ -71,6 +71,12 @@ public class PointcloudToMesh : MonoBehaviour {
 					
 		}
 
+		//	never added any verts
+		if (!BoundsInitialised) {
+			throw new System.Exception ("Failed to parse any points");
+		}
+
+
 		//	center verts
 		if (CenterMesh) {
 			var BoundsCenter = MinMax.center;
