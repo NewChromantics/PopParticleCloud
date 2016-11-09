@@ -1,6 +1,6 @@
 ﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
 
-Shader "NewChromantics/PopParticleCloudMesh"
+Shader "NewChromantics/PopParticleCloudMesh_NoGeom"
 {
 	Properties
 	{
@@ -23,19 +23,8 @@ Shader "NewChromantics/PopParticleCloudMesh"
 			//	https://docs.unity3d.com/Manual/SL-ShaderCompileTargets.html
 			#pragma target 3.5
 
-			#pragma shader_feature POINT_TOPOLOGY
-			#define GEOMETRY_TRIANGULATION
-
-			#ifndef GEOMETRY_TRIANGULATION
-			#define VERTEX_TRIANGULATION
-			#endif
-
 			#pragma vertex vert
 			#pragma fragment frag
-
-			#ifdef GEOMETRY_TRIANGULATION
-			#pragma geometry geom
-			#endif
 
 			#include "UnityCG.cginc"
 
@@ -47,18 +36,11 @@ Shader "NewChromantics/PopParticleCloudMesh"
 				float3 Normal : NORMAL;
 			};
 
-			struct vert2geo
-			{
-				float4 WorldPos : TEXCOORD1;
-				float2 uv : TEXCOORD0;
-				float4 Rgba : COLOR;
-			};
-
 			struct FragData
 			{
-				float3 LocalOffset : TEXCOORD1;
 				float4 ScreenPos : SV_POSITION;
-				float3 Colour : TEXCOORD4;
+				float3 LocalOffset : TEXCOORD0;
+				float3 Colour : TEXCOORD1;
 			};
 
 
@@ -98,37 +80,20 @@ Shader "NewChromantics/PopParticleCloudMesh"
                	x.LocalOffset += isb * float3( -Width,Bottom,0 );
                	x.LocalOffset += isc * float3( Width,Bottom,0 );
 
-                float3 x_WorldPos = mul( UNITY_MATRIX_V, input_WorldPos ) ;//+ (x.LocalOffset * ParticleSize3);
+                float3 x_WorldPos = mul( UNITY_MATRIX_V, input_WorldPos ) + (x.LocalOffset * ParticleSize3);
 	            x.ScreenPos = mul( UNITY_MATRIX_P, float4(x_WorldPos,1) );
 	            x.Colour = TriangleIndexer;
 	            x.Colour = lerp( x.Colour, input_Rgba, UseVertexColour );
 	            return x;
 			}
 
-
-
-
-
-			#ifdef GEOMETRY_TRIANGULATION
-			vert2geo vert (app2vert v)
-			{
-				vert2geo o;
-
-				float4 LocalPos = v.LocalPos;
-				o.WorldPos = mul( unity_ObjectToWorld, LocalPos );
-				o.uv = v.uv;
-				o.Rgba = v.Rgba;
-
-				return o;
-			}
-			#endif
-
-			#ifdef VERTEX_TRIANGULATION
 			FragData vert(app2vert v)
 			{
 				
 				float4 LocalPos = v.LocalPos;
 				float3 WorldPos = mul( unity_ObjectToWorld, LocalPos );
+
+				//WorldPos = float3(0,0,0);
 
 				float3 ParticleSize3 = GetParticleSize3();
 
@@ -139,44 +104,8 @@ Shader "NewChromantics/PopParticleCloudMesh"
 
 	            return o;
 			}
-			#endif
 
 
-		
-			#ifdef GEOMETRY_TRIANGULATION
-			#if POINT_TOPOLOGY
-			[maxvertexcount(9)]
-            void geom(point vert2geo _input[1], inout TriangleStream<FragData> OutputStream)
-            {
-            	int v=0;
-            #else
-            [maxvertexcount(9)]
-            void geom(triangle vert2geo _input[3], inout TriangleStream<FragData> OutputStream)
-            {
-            	//	non-shared vertex in triangles is 2nd
-            	int v=1;
-            #endif
-            	//	get particle size in worldspace
-				float3 ParticleSize3 = GetParticleSize3();
-
-				{
-	            	vert2geo input = _input[v];
-
-	                FragData a = MakeFragData( float3(1,0,0), input.WorldPos, input.Rgba, ParticleSize3 );
-	                FragData b = MakeFragData( float3(0,1,0), input.WorldPos, input.Rgba, ParticleSize3 );
-	                FragData c = MakeFragData( float3(0,0,1), input.WorldPos, input.Rgba, ParticleSize3 );
-
-	                a.Colour = float3(1,0,0);
-	                b.Colour = float3(1,0,0);
-	                c.Colour = float3(1,0,0);
-
-	              	OutputStream.Append(a);
-	              	OutputStream.Append(b);
-	              	OutputStream.Append(c);
-	            }
-            }
-            #endif//GEOMETRY_TRIANGULATION
-			
 
 			fixed4 frag(FragData i) : SV_Target
 			{

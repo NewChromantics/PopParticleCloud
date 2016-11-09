@@ -14,7 +14,11 @@ public class PointcloudToMesh : MonoBehaviour {
 	public bool		CenterMesh = true;
 	public bool		MoveSelf = true;
 	public bool		ModifySharedMaterial = true;
-	public string	EnableShaderFeature = "POINT_GEOMETRY";
+	public bool		GenerateAsPoints = true;
+	public string	PointGeometryShaderFeature = "POINT_TOPOLOGY";
+
+	public bool		UseVertexTriangulation = false;
+	public string	VertexTriangulationShaderFeature = "VERTEX_TRIANGULATION";
 
 	void Update ()
 	{
@@ -33,9 +37,14 @@ public class PointcloudToMesh : MonoBehaviour {
 		Debug.Log ("parsing " + Filename);
 		var Lines = System.IO.File.ReadAllLines (Filename);
 		var Positions = new List<Vector3> ();
+		var Normals = new List<Vector3> ();
 		var Colours = new List<Color> ();
 		bool BoundsInitialised = false;
 		Bounds MinMax = new Bounds ();
+
+		//	generate indicies
+		int VertexesPerTriangle = ( GenerateAsPoints ? 1 : 3 );
+
 
 		//	decode points
 		{
@@ -60,8 +69,27 @@ public class PointcloudToMesh : MonoBehaviour {
 					}
 
 					MinMax.Encapsulate( Pos3 );
-					Positions.Add( Pos3 );
-					Colours.Add( Colour3 );
+
+					if ( GenerateAsPoints )
+					{
+						Positions.Add( Pos3 );
+						Colours.Add( Colour3 );
+						Normals.Add( new Vector3(1,0,0) );
+					}
+					else
+					{
+						Positions.Add( Pos3 );
+						Colours.Add( Colour3 );
+						Normals.Add( new Vector3(1,0,0) );
+
+						Positions.Add( Pos3 );
+						Colours.Add( Colour3 );
+						Normals.Add( new Vector3(0,1,0) );
+
+						Positions.Add( Pos3 );
+						Colours.Add( Colour3 );
+						Normals.Add( new Vector3(0,0,1) );
+					}
 				} 
 				catch (System.Exception e) 
 				{
@@ -90,14 +118,15 @@ public class PointcloudToMesh : MonoBehaviour {
 				this.transform.localPosition = BoundsCenter;
 		}
 
-		//	generate indicies
-		var Indexes = new int[Positions.Count];
-		for (int i = 0;	i < Indexes.Length;	i++)
-			Indexes [i] = i;
+		//  generate indicies 
+		var Indexes = new int[Positions.Count]; 
+		for (int i = 0;  i < Indexes.Length;  i++) 
+			Indexes [i] = i; 
 
 		PointMesh.SetVertices( Positions );
+		PointMesh.SetNormals (Normals);
 		PointMesh.SetColors (Colours);
-		PointMesh.SetIndices (Indexes, MeshTopology.Points, 0);
+		PointMesh.SetIndices (Indexes, GenerateAsPoints ? MeshTopology.Points : MeshTopology.Triangles, 0);
 		PointMesh.bounds = MinMax;
 
 
@@ -105,10 +134,18 @@ public class PointcloudToMesh : MonoBehaviour {
 		mf.mesh = PointMesh;
 
 		var mr = this.GetComponent<MeshRenderer> ();
-		if ( ModifySharedMaterial )
-			mr.sharedMaterial.EnableKeyword (EnableShaderFeature);
+		var mat = ModifySharedMaterial ? mr.sharedMaterial : mr.material;
+
+		if (GenerateAsPoints)
+			mat.EnableKeyword (PointGeometryShaderFeature);
 		else
-			mr.material.EnableKeyword (EnableShaderFeature);
+			mat.DisableKeyword (PointGeometryShaderFeature);
+
+		if ( UseVertexTriangulation )
+			mat.EnableKeyword (VertexTriangulationShaderFeature);
+		else
+			mat.DisableKeyword (VertexTriangulationShaderFeature);
+
 
 		var bc = this.GetComponent<BoxCollider> ();
 		if (bc != null) {

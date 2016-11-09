@@ -24,7 +24,7 @@ Material:
     m_Floats:
     - first:
         name: ParticleSize
-      second: 0.57
+      second: 0.305
     - first:
         name: Radius
       second: 0.28

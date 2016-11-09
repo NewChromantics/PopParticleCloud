@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: PopParticleCloudMesh Points
-  m_Shader: {fileID: 4800000, guid: 8c847829cd09f49db9971b478973c10b, type: 3}
+  m_Name: PopParticleCloudMesh_NoGeom
+  m_Shader: {fileID: 4800000, guid: d2ad0a4035c65404b9eba27aa04ee1cb, type: 3}
   m_ShaderKeywords: VERTEX_TRIANGULATION
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
@@ -24,11 +24,11 @@ Material:
     m_Floats:
     - first:
         name: ParticleSize
-      second: 0.588
+      second: 0.1
     - first:
         name: Radius
-      second: 0.285
+      second: 0.5
     - first:
         name: UseVertexColour
-      second: 1
+      second: 0
     m_Colors: []
