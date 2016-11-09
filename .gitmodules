@@ -1,3 +1,6 @@
 [submodule "Assets/PopUnityCommon"]
 	path = Assets/PopUnityCommon
 	url = https://github.com/SoylentGraham/PopUnityCommon.git
+[submodule "Assets/Plugins/Android/assets"]
+	path = Assets/Plugins/Android/assets
+	url = https://github.com/NewChromantics/OculusSignatures.git
