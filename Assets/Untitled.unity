@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44692492, g: 0.4967869, b: 0.57508546, a: 1}
+  m_IndirectSpecularColor: {r: 0.4469247, g: 0.49678522, b: 0.5750836, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -182,7 +182,8 @@ MonoBehaviour:
   Dirty: 0
   Template: {fileID: 2088278887}
   Paths:
-  - streamingassets:DoubleTree_2.5mx500
+  - 'streamingassets:'
+  - sdcard:pointcloud/
   ExcludeMatching:
   - .meta
   OnlyMatching: []
