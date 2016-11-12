@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4469247, g: 0.49678522, b: 0.5750836, a: 1}
+  m_IndirectSpecularColor: {r: 0.44692492, g: 0.4967869, b: 0.57508546, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -279,7 +279,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
 --- !u!1 &567010226
 GameObject:
   m_ObjectHideFlags: 0
@@ -310,7 +310,7 @@ MonoBehaviour:
   Dirty: 0
   Template: {fileID: 568462557}
   Paths:
-  - 'streamingassets:'
+  - streamingassets:DoubleTree_2.5mx500/
   - sdcard:pointcloud/
   ExcludeMatching:
   - .meta
@@ -329,8 +329,9 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 2088278891}
+  - {fileID: 568462560}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
 --- !u!1 &568462555
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,7 +345,7 @@ GameObject:
   - 114: {fileID: 568462557}
   - 65: {fileID: 568462556}
   m_Layer: 0
-  m_Name: slice_template (1)
+  m_Name: slice_template triangles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -377,7 +378,7 @@ MonoBehaviour:
   Filename: /Volumes/Code/PopParticleCloud/Assets/StreamingAssets/Slice__000001.txt
   PointMesh: {fileID: 35336514}
   CenterMesh: 1
-  MoveSelf: 0
+  MoveSelf: 1
   ModifySharedMaterial: 1
   GenerateAsPoints: 0
   PointGeometryShaderFeature: POINT_TOPOLOGY
@@ -430,8 +431,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Father: {fileID: 567010228}
+  m_RootOrder: 1
 --- !u!43 &683014801
 Mesh:
   m_ObjectHideFlags: 0
@@ -1366,7 +1367,7 @@ GameObject:
   - 114: {fileID: 2088278887}
   - 65: {fileID: 2088278889}
   m_Layer: 0
-  m_Name: slice_template
+  m_Name: slice_template points
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
