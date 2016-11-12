@@ -12,6 +12,7 @@
 		Tags { "RenderType"="Opaque" }
 		LOD 100
 		Cull off
+		Blend Off
 
 		Pass
 		{
@@ -114,7 +115,7 @@
 
 				if ( DistanceFromCenterSq > squared(Radius) )
 					discard;
-				
+	
 				return float4( i.Colour, 1 );
 			}
 			ENDCG
