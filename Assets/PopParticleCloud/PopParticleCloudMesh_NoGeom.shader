@@ -26,6 +26,10 @@
 
 			#include "UnityCG.cginc"
 
+			#define lengthsq(x)	dot( (x), (x) )
+			#define squared(x)	( (x)*(x) )
+
+
 			struct app2vert
 			{
 				float4 LocalPos : POSITION;
@@ -50,6 +54,7 @@
 
 			float3 GetParticleSize3()
 			{
+				return float3(ParticleSize,ParticleSize,ParticleSize);
 			//	gr: thought it length of each row was scale but... doesn't seem to be. row vs col major issue?
 				//float WorldScale = length(unity_ObjectToWorld[0]) + length(unity_ObjectToWorld[1]) + length(unity_ObjectToWorld[2]);
 				//WorldScale /= 3.0;
@@ -102,22 +107,14 @@
 	            return o;
 			}
 
-
-
+		
 			fixed4 frag(FragData i) : SV_Target
 			{
-				//return float4( i.Bary,1  );
-				float DistanceFromCenter = length(i.LocalOffset);
-				//float Bary = max( i.LocalOffset.x, max( i.LocalOffset.y, i.LocalOffset.z ) );
-				//float Bary = max( i.Bary.x, max( i.Bary.y, i.Bary.z ) );
-				//float Bary = i.Bary.x + i.Bary.y + i.Bary.z;
-				//Bary /= 3;
-				//return float4( Bary, Bary, Bary, 1 );
-				if ( DistanceFromCenter > Radius )
-				{
-					//return float4(0,0,0,1);
+				float DistanceFromCenterSq = lengthsq(i.LocalOffset);
+
+				if ( DistanceFromCenterSq > squared(Radius) )
 					discard;
-				}
+				
 				return float4( i.Colour, 1 );
 			}
 			ENDCG
