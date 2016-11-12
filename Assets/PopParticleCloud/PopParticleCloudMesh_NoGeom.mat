@@ -24,11 +24,11 @@ Material:
     m_Floats:
     - first:
         name: ParticleSize
-      second: 0.1
+      second: 0.676
     - first:
         name: Radius
-      second: 0.5
+      second: 0.19
     - first:
         name: UseVertexColour
-      second: 0
+      second: 1
     m_Colors: []

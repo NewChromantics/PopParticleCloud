@@ -166,11 +166,7 @@
 	                FragData b = MakeFragData( float3(0,1,0), input.WorldPos, input.Rgba, ParticleSize3 );
 	                FragData c = MakeFragData( float3(0,0,1), input.WorldPos, input.Rgba, ParticleSize3 );
 
-	                a.Colour = float3(1,0,0);
-	                b.Colour = float3(1,0,0);
-	                c.Colour = float3(1,0,0);
-
-	              	OutputStream.Append(a);
+					OutputStream.Append(a);
 	              	OutputStream.Append(b);
 	              	OutputStream.Append(c);
 	            }

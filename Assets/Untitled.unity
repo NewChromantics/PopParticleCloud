@@ -312,6 +312,7 @@ MonoBehaviour:
   Paths:
   - streamingassets:DoubleTree_2.5mx500/
   - sdcard:pointcloud/
+  - /Volumes/Assets/MLFPointcloud/DoubleTree_2.5mx500
   ExcludeMatching:
   - .meta
   OnlyMatching: []
@@ -379,7 +380,7 @@ MonoBehaviour:
   PointMesh: {fileID: 1439994309}
   CenterMesh: 1
   MoveSelf: 1
-  Density: 0.05
+  Density: 0.1
   ModifySharedMaterial: 1
   GenerateAsPoints: 0
   PointGeometryShaderFeature: POINT_TOPOLOGY
@@ -1133,8 +1134,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1586828864}
-  m_LocalRotation: {x: -0.2540465, y: 0.14356014, z: -0.03816083, w: -0.95571685}
-  m_LocalPosition: {x: 6.9333606, y: 17.34545, z: -25.709621}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 14, y: 20, z: -2.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -1249,7 +1250,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &1866689154
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1328,7 +1329,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1998248014
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1343,10 +1344,10 @@ RectTransform:
   - {fileID: 1290074583}
   m_Father: {fileID: 823834882}
   m_RootOrder: 1
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 500, y: -375}
+  m_SizeDelta: {x: 1000, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1998248015
 MonoBehaviour:
@@ -1421,7 +1422,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &2019203356
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1518,7 +1519,7 @@ MonoBehaviour:
   PointMesh: {fileID: 683014801}
   CenterMesh: 1
   MoveSelf: 1
-  Density: 1
+  Density: 0.1
   ModifySharedMaterial: 1
   GenerateAsPoints: 1
   PointGeometryShaderFeature: POINT_TOPOLOGY
