@@ -34,6 +34,9 @@ public class PointcloudToMesh : MonoBehaviour {
 
 	public void GenerateNewMesh()
 	{
+		if (Density == 0.0f) {
+			throw new System.Exception ("Density is " + Density + " cannot create mesh");
+		}
 		//	create mesh
 		PointMesh = new Mesh();
 
@@ -119,6 +122,36 @@ public class PointcloudToMesh : MonoBehaviour {
 
 			if (MoveSelf)
 				this.transform.localPosition = BoundsCenter;
+		}
+
+
+		//	crop for density
+		if (Density < 1) 
+		{
+			var OldCount = Positions.Count;
+			var Step = 1.0f / (1.0f-Density);
+			if (Step <= 1.0f)
+				throw new System.Exception ("Step is too low " + Step);
+
+			if (GenerateAsPoints) {
+				for (float i = Positions.Count - 1;	i >= 0;	i -= Step) {
+					Positions.RemoveAt ((int)i);
+					Normals.RemoveAt ((int)i);
+					Colours.RemoveAt ((int)i);
+				}
+			} else {
+				int TriangleCount = Positions.Count / 3;
+				for (float i = TriangleCount - 1;	i >= 0;	i -= Step) {
+
+					var ti = (int)i * 3;
+					Positions.RemoveRange(ti, 3 );
+					Normals.RemoveRange (ti, 3 );
+					Colours.RemoveRange (ti, 3 );
+				}
+			}
+
+			var NewDensity = Positions.Count / (float)OldCount;
+			Debug.Log ("Reduced points from " + OldCount + " to " + Positions.Count + "(" + (Density*100) + "% requested, produced " + (NewDensity*100) + "%)");
 		}
 
 		//	cap to the unity limit
