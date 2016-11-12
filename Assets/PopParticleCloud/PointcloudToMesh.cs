@@ -39,6 +39,7 @@ public class PointcloudToMesh : MonoBehaviour {
 		}
 		//	create mesh
 		PointMesh = new Mesh();
+		PointMesh.name = this.name;
 
 		Debug.Log ("parsing " + Filename);
 		var Lines = System.IO.File.ReadAllLines (Filename);
