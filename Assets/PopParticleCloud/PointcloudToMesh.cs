@@ -13,6 +13,9 @@ public class PointcloudToMesh : MonoBehaviour {
 	public Mesh		PointMesh;
 	public bool		CenterMesh = true;
 	public bool		MoveSelf = true;
+
+	[Range(0,1)]
+	public float	Density = 1.0f;
 	public bool		ModifySharedMaterial = true;
 	public bool		GenerateAsPoints = true;
 	public string	PointGeometryShaderFeature = "POINT_TOPOLOGY";
@@ -117,6 +120,17 @@ public class PointcloudToMesh : MonoBehaviour {
 			if (MoveSelf)
 				this.transform.localPosition = BoundsCenter;
 		}
+
+		//	cap to the unity limit
+		var VertexLimit = 65535 - (GenerateAsPoints ? 1 : 3);
+		if (Positions.Count >= VertexLimit) {
+			var Dropped = Positions.Count - VertexLimit;
+			Debug.LogWarning ("capped point cloud to vertex limit of " + VertexLimit + " from " + Positions.Count + ". " + Dropped + " dropped");
+			Positions.RemoveRange (VertexLimit, Dropped);
+			Normals.RemoveRange (VertexLimit, Dropped);
+			Colours.RemoveRange (VertexLimit, Dropped);
+		}
+
 
 		//  generate indicies 
 		var Indexes = new int[Positions.Count]; 
