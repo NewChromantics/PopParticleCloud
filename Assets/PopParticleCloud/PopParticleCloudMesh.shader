@@ -1,6 +1,4 @@
-﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
-
-Shader "NewChromantics/PopParticleCloudMesh"
+﻿Shader "NewChromantics/PopParticleCloudMesh"
 {
 	Properties
 	{
@@ -98,7 +96,7 @@ Shader "NewChromantics/PopParticleCloudMesh"
                	x.LocalOffset += isb * float3( -Width,Bottom,0 );
                	x.LocalOffset += isc * float3( Width,Bottom,0 );
 
-                float3 x_WorldPos = mul( UNITY_MATRIX_V, input_WorldPos ) ;//+ (x.LocalOffset * ParticleSize3);
+                float3 x_WorldPos = mul( UNITY_MATRIX_V, float4(input_WorldPos,1) ) + (x.LocalOffset * ParticleSize3);
 	            x.ScreenPos = mul( UNITY_MATRIX_P, float4(x_WorldPos,1) );
 	            x.Colour = TriangleIndexer;
 	            x.Colour = lerp( x.Colour, input_Rgba, UseVertexColour );
@@ -134,8 +132,6 @@ Shader "NewChromantics/PopParticleCloudMesh"
 
 				FragData o;
 				o = MakeFragData( v.Normal, WorldPos, v.Rgba.xyz, ParticleSize3 );
-
-				o.Colour = float3(0,1,0);
 
 	            return o;
 			}
