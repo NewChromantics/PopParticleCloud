@@ -19,14 +19,22 @@ public class PointcloudLoader : MonoBehaviour {
 	void LoadPointCloud(string Filename)
 	{
 		var NewCloud = GameObject.Instantiate (Template);
-
-		//	if this throws we don't store the object
-		NewCloud.Filename = Filename;
-		NewCloud.GenerateNewMesh();
-
 		NewCloud.transform.SetParent (this.transform,false);
-		GeneratedClouds.Add (NewCloud.gameObject);
-		NewCloud.gameObject.SetActive (true);
+
+		try
+		{
+			//	if this throws we don't store the object
+			NewCloud.Filename = Filename;
+			NewCloud.name = System.IO.Path.GetFileName( Filename );
+			NewCloud.GenerateNewMesh();
+
+			GeneratedClouds.Add (NewCloud.gameObject);
+			NewCloud.gameObject.SetActive (true);
+		}
+		catch {
+			GameObject.Destroy (NewCloud);
+			throw;
+		}
 	}
 
 	void ClearClouds()
