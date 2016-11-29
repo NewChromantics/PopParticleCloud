@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
@@ -20,6 +20,12 @@ public class PopCloudInstanceRenderer : MonoBehaviour {
 
 	public List<Matrix4x4>	InstanceMatrixes;
 
+
+	public bool			UseCommandBuffer = true;
+	CommandBuffer		Command;
+	Camera				CommandCamera;
+	public CameraEvent	CommandBufferEvent;
+
 	void Update () {
 
 		if (DirtyChildren)
@@ -37,19 +43,48 @@ public class PopCloudInstanceRenderer : MonoBehaviour {
 			Dirty = false;
 		}
 
+		if (!UseCommandBuffer)
+			DeleteCommad ();
+
 		RenderInstances();
 	}
+
+	void DeleteCommad()
+	{
+		if (CommandCamera !=null && Command !=null) {
+			CommandCamera.RemoveCommandBuffer (CommandBufferEvent,Command);
+		}
+
+		Command = null;
+		CommandCamera = null;
+	}
+		
 
 	public void RenderInstances()
 	{
 		var mf = GetComponent<MeshFilter>();
 		var mr = GetComponent<MeshRenderer>();
 
-		var CloudMaterial = GetComponent<MeshRenderer>();
-
 		//Debug.Log("Rendering " + InstanceMatrixes.Count + " isntances");
+		if ( Command == null && UseCommandBuffer )
+		{
+			var Cam = Camera.main;
+			if ( Cam != null )
+			{
+				Command = new CommandBuffer ();
+				Command.name = this.name;
+				CommandCamera = Cam;
+				int ShaderPass = 0;
+				Command.DrawMeshInstanced( mf.sharedMesh, 0, mr.sharedMaterial, ShaderPass, InstanceMatrixes.ToArray() );
+				Cam.AddCommandBuffer( CommandBufferEvent, Command );
+				Debug.Log ("Added command buffer " + Command.name + " to " + Cam.name);
+			}
+		}
 
-        Graphics.DrawMeshInstanced( mf.sharedMesh, 0, mr.sharedMaterial, InstanceMatrixes );
+		if ( Command == null )
+		{
+	        Graphics.DrawMeshInstanced( mf.sharedMesh, 0, mr.sharedMaterial, InstanceMatrixes );
+		}
 
 		//	now we're drawing the isntances, don't draw self
 		mr.enabled = false;
@@ -57,6 +92,8 @@ public class PopCloudInstanceRenderer : MonoBehaviour {
 
 	public void Generate()
 	{
+		DeleteCommad();
+
 		var PointMesh = new Mesh();
 
 		PointMesh.name = this.name;
@@ -137,6 +174,8 @@ public class PopCloudInstanceRenderer : MonoBehaviour {
 
 	public void GenerateChildren()
 	{
+		DeleteCommad();
+
 		InstanceMatrixes = new List<Matrix4x4>();
 		var Children = GetComponentsInChildren<MeshRenderer>(true);
 		foreach ( var Child in Children )
